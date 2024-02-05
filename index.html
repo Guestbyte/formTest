@@ -5,58 +5,124 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML forms to google sheet</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>HTML forms to Google Sheet</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.js"></script>
+  
 </head>
 
 <body>
-  <div class="flex items-center h-screen w-full bg-orange-100">
-    <div class="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
-      <h1 class="block w-full text-center text-grey-darkest mb-6">Feedback</h1>
-      <form class="mb-4 flex flex-wrap justify-between" id="form">
+  <div id="app">
+    <v-app>
+      <template>
+        <v-app-bar app color="#0077B5" dark>
+          <v-app-bar-nav-icon @click.stop="toggleDrawer"></v-app-bar-nav-icon>
+          <v-toolbar-title>LinkedIn-like Header</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn text>Home</v-btn>
+          <v-btn text>My Network</v-btn>
+          <v-btn text>Jobs</v-btn>
+          <v-btn text>Messaging</v-btn>
+          <v-btn text>Notifications</v-btn>
+          <v-btn text>Me</v-btn>
+        </v-app-bar>
+      </template>
 
+      <v-container class="fill-height">
+        <v-row align="center" justify="center">
+          <v-col cols="12" md="8">
+            <v-card class="mt-12">
+              <v-card-title class="text-center mb-4">Feedback</v-card-title>
+              <v-form @submit.prevent="submitForm">
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field label="Name" v-model="formData.name" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-textarea label="Message" v-model="formData.message" required></v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-checkbox v-model="formData.trends" label="1D🔼"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="4H🔼"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="1H🔼"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="LTF🔼"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="1D🔽"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="4H🔽"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="1H🔽"></v-checkbox>
+                      <v-checkbox v-model="formData.trends" label="LTF🔽"></v-checkbox>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="text-center">
+                      <v-btn color="orange" @click="submitForm">Submit</v-btn>
+                      <v-progress-circular
+                        v-if="loading"
+                        indeterminate
+                        color="primary"
+                      ></v-progress-circular>
+                      <p v-if="successMessage">{{ successMessage }}</p>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-form>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
 
-        <div class="flex flex-col w-full mb-4">
-          <label class="field-label" for="email">Name</label>
-          <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="Name" id="email">
-        </div>
-        <div class="flex flex-col w-full mb-4">
-          <label class="field-label" for="password">Message</label>
-          <textarea class="bg-green-100 px-2 py-1 outline-none" type="text" name="Message" id="Message"></textarea>
-        </div>
-
-        <div class="formbuilder-checkbox w-full mb-4">
-          <input type="checkbox" name="TRENDS" value="1D🔼">1D🔼<br>
-          <input type="checkbox" name="TRENDS" value="4H🔼">4H🔼<br>
-          <input type="checkbox" name="TRENDS" value="1H🔼">1H🔼<br>
-          <input type="checkbox" name="TRENDS" value="LTF🔼">LTF🔼<br>
-          <input type="checkbox" name="TRENDS" value="1D🔽">1D🔽<br>
-          <input type="checkbox" name="TRENDS" value="4H🔽">4H🔽<br>
-          <input type="checkbox" name="TRENDS" value="1H🔽">1H🔽<br>
-          <input type="checkbox" name="TRENDS" value="LTF🔽">LTF🔽<br>
-        </div>
-        <button class="bg-orange-300 px-3 py-1 text-white mx-auto" type="submit">Submit</button>
-      </form>
-    </div>
+    </v-app>
   </div>
 
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data() {
+        return {
+          formData: {
+            name: '',
+            message: '',
+            trends: []
+          },
+          scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
+          drawer: false,
+          loading: false,
+          successMessage: false,
+        };
+      },
+      methods: {
+        toggleDrawer() {
+          this.drawer = !this.drawer;
+        },
+        // Submit the form and handle the loading state while making a POST request with form data.
+        submitForm() {
+          this.loading = true;
+          const formData = new FormData();
+          Object.keys(this.formData).forEach(key => {
+            if (Array.isArray(this.formData[key])) {
+              formData.append(key, this.formData[key].join(' '));
+            } else {
+              formData.append(key, this.formData[key]);
+            }
+          });
+        
+          fetch(this.scriptUrl, { method: 'POST', body: formData })
+            .then(response => {
+              this.successMessage = 'Form submitted successfully!';
+              this.loading = false;
+            })
+            .catch(error => {
+              alert('Error!', error.message);
+              this.loading = false;
+            });
+        }
+      },
+    });
+  </script>
 </body>
-
-<script>
-  const form = document.querySelector("#form")
-  // const scriptURL = 'https://script.google.com/macros/s/AKfycbwOBWVDPrMAUT_K9gneayFeaJigOSAAiwVH70QeOSKJqGwVlE5FvbgKcns4cV90AGiZPQ/exec'
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec'
-
-  form.addEventListener('submit', e => {
-    e.preventDefault()
-
-    const responseBody = new FormData(form)
-    const TrendBody = responseBody.getAll("TRENDS").join(" ")
-    responseBody.set('TRENDS', TrendBody)
-    fetch(scriptURL, { method: 'POST', body: responseBody })
-      .then(response => { alert('Success!', response) })
-      .catch(error => alert('Error!', error.message))
-  })
-</script>
 
 </html>

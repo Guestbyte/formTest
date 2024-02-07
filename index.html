@@ -5,75 +5,74 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML forms to Google Sheet</title>
+  <title>Patricia Grams - La Escala de Compasión (EC)</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.js"></script>
-  
 </head>
 
 <body>
   <div id="app">
-    <v-app>
-      <template>
-        <v-app-bar app color="#0077B5" dark>
-          <v-app-bar-nav-icon @click.stop="toggleDrawer"></v-app-bar-nav-icon>
-          <v-toolbar-title>LinkedIn-like Header</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn text>Home</v-btn>
-          <v-btn text>My Network</v-btn>
-          <v-btn text>Jobs</v-btn>
-          <v-btn text>Messaging</v-btn>
-          <v-btn text>Notifications</v-btn>
-          <v-btn text>Me</v-btn>
-        </v-app-bar>
-      </template>
-
-      <v-container class="fill-height">
-        <v-row align="center" justify="center">
-          <v-col cols="12" md="8">
-            <v-card class="mt-12">
-              <v-card-title class="text-center mb-4">Feedback</v-card-title>
-              <v-form @submit.prevent="submitForm">
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <v-text-field label="Name" v-model="formData.name" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <v-textarea label="Message" v-model="formData.message" required></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col>
-                      <v-checkbox v-model="formData.trends" label="1D🔼"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="4H🔼"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="1H🔼"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="LTF🔼"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="1D🔽"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="4H🔽"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="1H🔽"></v-checkbox>
-                      <v-checkbox v-model="formData.trends" label="LTF🔽"></v-checkbox>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="text-center">
-                      <v-btn color="orange" @click="submitForm">Submit</v-btn>
-                      <v-progress-circular
-                        v-if="loading"
-                        indeterminate
-                        color="primary"
-                      ></v-progress-circular>
-                      <p v-if="successMessage">{{ successMessage }}</p>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-form>
-            </v-card>
+    <v-app-bar app color="white" elevate-on-scroll>
+      <v-container>
+        <v-row align="center">
+          <v-col cols="auto">
+            <v-img src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg" max-height="40" contain></v-img>
+          </v-col>
+          <v-col>
+            <v-toolbar-title>Patricia Grams - La Escala de Compasión (EC)</v-toolbar-title>
           </v-col>
         </v-row>
       </v-container>
+    </v-app-bar>
 
+    <v-app>
+      <v-container>
+<br>
+<br>
+<br>
+        <v-card>
+          <v-card-text>
+            La Escala de Compasión (EC)
+            <br />
+            Instrucciones: Por favor, lee cada afirmación cuidadosamente antes de responder. Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser tu experiencia. Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
+          </v-card-text>
+        </v-card>
+
+        <v-form v-model="valid">
+          <v-text-field v-model="name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
+          <v-select v-model="age" :items="ageOptions" label="Edad" required></v-select>
+          <v-select v-model="gender" :items="genders" label="Genero" required></v-select>
+          <v-row v-for="(question, index) in questions" :key="index">
+            <v-col>
+              <p>{{ question }}</p>
+            </v-col>
+            <v-col>
+              <v-radio-group v-model="formData.answers[index]">
+                <v-radio label="1 - Casi nunca"></v-radio>
+                <v-radio label="2"></v-radio>
+                <v-radio label="3"></v-radio>
+                <v-radio label="4"></v-radio>
+                <v-radio label="5 - Casi siempre"></v-radio>
+              </v-radio-group>
+            </v-col>
+          </v-row>
+          <v-btn @click="submitForm" :disabled="loading" color="primary">{{ loading ? 'Enviando...' : 'Enviar'
+            }}</v-btn>
+          <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
+          <p v-if="successMessage">{{ successMessage }}</p>
+        </v-form>
+        <br />
+
+        <v-card>
+          <v-card-text>
+            La Escala de Compasión (EC)
+            <br />
+            Reference: Pommier, E., Neff, K. D. & Tóth-Király I. (2019). The development and validation of the
+            Compassion Scale. Assessment, 21-39.
+          </v-card-text>
+        </v-card>
+      </v-container>
     </v-app>
   </div>
 
@@ -84,42 +83,69 @@
       data() {
         return {
           formData: {
-            name: '',
-            message: '',
-            trends: []
+            answers: Array(16).fill(0), // Initialize array to store answers
           },
           scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
-          drawer: false,
           loading: false,
-          successMessage: false,
+          successMessage: '',
+          questions: [
+            "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
+            "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
+            "No me preocupo por los problemas de otras personas.",
+            "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte de ser humano.",
+            "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
+            "Me gusta estar ahí para los demás en tiempos de dificultad.",
+            "Pienso poco en las preocupaciones de los demás.",
+            "Siento que es importante reconocer que todas las personas tienen debilidades y nadie es perfecto.",
+            "Escucho pacientemente cuando la gente me cuenta sus problemas.",
+            "Mi corazón se conmueve por las personas que están infelices.",
+            "Intento evitar a las personas que están experimentando mucho dolor.",
+            "Siento que el sufrimiento es solo una parte de la experiencia humana común.",
+            "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
+            "Cuando otros sienten tristeza, intento consolarlos.",
+            "No puedo conectar realmente con otras personas cuando están sufriendo.",
+            "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
+          ],
+          valid: false,
+          name: '',
+          age: null,
+          ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+          gender: '',
+          genders: ['Masculino', 'Femenino', 'Otro'],
+          rules: {
+            minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
+          }
         };
       },
       methods: {
-        toggleDrawer() {
-          this.drawer = !this.drawer;
-        },
-        // Submit the form and handle the loading state while making a POST request with form data.
         submitForm() {
+          if (!this.valid) {
+            this.successMessage = 'Por favor, rellena el formulario correctamente!';
+            return;
+          }
           this.loading = true;
           const formData = new FormData();
-          Object.keys(this.formData).forEach(key => {
-            if (Array.isArray(this.formData[key])) {
-              formData.append(key, this.formData[key].join(' '));
-            } else {
-              formData.append(key, this.formData[key]);
-            }
+          formData.append('Name', 'John Doe');
+          formData.append('Gender', 'Male/Female');
+          formData.append('Age', '18');
+          formData.append('Industry', 'Technology');
+          formData.append('Company Size', '1-10');
+          formData.append('Continent', 'Europe');
+          this.formData.answers.forEach((answer, index) => {
+            formData.append(`answer${index + 1}`, answer);
           });
-        
+
           fetch(this.scriptUrl, { method: 'POST', body: formData })
-            .then(response => {
-              this.successMessage = 'Form submitted successfully!';
+            .then(response => response.json())
+            .then(data => {
+              this.successMessage = '¡Formulario enviado con éxito!';
               this.loading = false;
             })
             .catch(error => {
-              alert('Error!', error.message);
+              console.error('Error submitting form:', error);
               this.loading = false;
             });
-        }
+        },
       },
     });
   </script>

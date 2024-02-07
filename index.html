@@ -13,65 +13,81 @@
 
 <body>
   <div id="app">
-    <v-app-bar app color="white" elevate-on-scroll>
-      <v-container>
-        <v-row align="center">
-          <v-col cols="auto">
-            <v-img src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg" max-height="40" contain></v-img>
-          </v-col>
-          <v-col>
-            <v-toolbar-title>Patricia Grams - La Escala de Compasión (EC)</v-toolbar-title>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-app-bar>
-
     <v-app>
       <v-container>
-<br>
-<br>
-<br>
-        <v-card>
-          <v-card-text>
-            La Escala de Compasión (EC)
-            <br />
-            Instrucciones: Por favor, lee cada afirmación cuidadosamente antes de responder. Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser tu experiencia. Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
-          </v-card-text>
-        </v-card>
-
-        <v-form v-model="valid">
-          <v-text-field v-model="name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
-          <v-select v-model="age" :items="ageOptions" label="Edad" required></v-select>
-          <v-select v-model="gender" :items="genders" label="Genero" required></v-select>
-          <v-row v-for="(question, index) in questions" :key="index">
-            <v-col>
-              <p>{{ question }}</p>
-            </v-col>
-            <v-col>
-              <v-radio-group v-model="formData.answers[index]">
-                <v-radio label="1 - Casi nunca"></v-radio>
-                <v-radio label="2"></v-radio>
-                <v-radio label="3"></v-radio>
-                <v-radio label="4"></v-radio>
-                <v-radio label="5 - Casi siempre"></v-radio>
-              </v-radio-group>
-            </v-col>
-          </v-row>
-          <v-btn @click="submitForm" :disabled="loading" color="primary">{{ loading ? 'Enviando...' : 'Enviar'
-            }}</v-btn>
-          <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
-          <p v-if="successMessage">{{ successMessage }}</p>
-        </v-form>
-        <br />
-
-        <v-card>
-          <v-card-text>
-            La Escala de Compasión (EC)
-            <br />
-            Reference: Pommier, E., Neff, K. D. & Tóth-Király I. (2019). The development and validation of the
-            Compassion Scale. Assessment, 21-39.
-          </v-card-text>
-        </v-card>
+        <v-col cols="10" align-self="center">
+          <v-card>
+            <v-img
+              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"
+              max-height="325" class="bg-grey-lighten-2"></v-img>
+          </v-card>
+          <br>
+          <v-card>
+            <v-card-text>
+              La Escala de Compasión (EC)
+              <br />
+              Instrucciones: Por favor, lee cada afirmación cuidadosamente antes de responder. Responde de acuerdo a
+              lo
+              que realmente refleja tu experiencia en lugar de lo que crees que debería ser tu experiencia. Indica con
+              qué
+              frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
+            </v-card-text>
+          </v-card>
+          <v-form v-model="form.valid">
+            <v-container>
+              <v-container fluid grid-list-md>
+                <v-row>
+                  <v-col cols="4" sm="4">
+                    <v-text-field v-model="form.name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
+                  </v-col>
+                  <v-col cols="4" sm="4">
+                    <v-select v-model="form.age" :items="form.ageOptions" label="Edad" required></v-select>
+                  </v-col>
+                  <v-col cols="4" sm="4">
+                    <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="4" sm="4">
+                    <v-text-field v-model="form.industry" label="Industria" required></v-text-field>
+                  </v-col>
+                  <v-col cols="4" sm="4">
+                    <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa" required></v-select>
+                  </v-col>
+                  <v-col cols="4" sm="4">
+                    <v-select v-model="form.continent" :items="form.continents" label="Continente" required></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-row v-for="(question, index) in form.questions" :key="index">
+                <v-col>
+                  <v-card>
+                    <v-card-text>{{ question }}</v-card-text>
+                    <v-card-actions class="d-flex">
+                      <v-radio-group v-model="form.answers[index]" row>
+                        <v-radio label="1 - Casi nunca" value="1" color="primary" class="mr-4"></v-radio>
+                        <v-radio label="2" value="2" color="primary" class="mr-4"></v-radio>
+                        <v-radio label="3" value="3" color="primary" class="mr-4"></v-radio>
+                        <v-radio label="4" value="4" color="primary" class="mr-4"></v-radio>
+                        <v-radio label="5 - Casi siempre" value="5" color="primary" class="mr-4"></v-radio>
+                      </v-radio-group>
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <br>
+              <v-btn @click="submitForm" :disabled="form.loading" color="primary">{{ form.loading ? 'Enviando...' : 'Enviar'
+                }}</v-btn>
+              <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
+              <p v-if="form.successMessage">{{ form.successMessage }}</p>
+            </v-container>
+          </v-form>
+          <v-card>
+            <v-card-text style="font-size: 12px;">
+              Reference: Pommier, E., Neff, K. D. & Tóth-Király I. (2019). The development and validation of the
+              Compassion Scale. Assessment, 21-39.
+            </v-card-text>
+          </v-card>
       </v-container>
     </v-app>
   </div>
@@ -82,36 +98,56 @@
       vuetify: new Vuetify(),
       data() {
         return {
-          formData: {
-            answers: Array(16).fill(0), // Initialize array to store answers
+          form: {
+            answers: Array(16).fill(0),
+            scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
+            loading: false,
+            successMessage: '',
+            questions: [
+              "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
+              "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
+              "No me preocupo por los problemas de otras personas.",
+              "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte de ser humano.",
+              "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
+              "Me gusta estar ahí para los demás en tiempos de dificultad.",
+              "Pienso poco en las preocupaciones de los demás.",
+              "Siento que es importante reconocer que todas las personas tienen debilidades y nadie es perfecto.",
+              "Escucho pacientemente cuando la gente me cuenta sus problemas.",
+              "Mi corazón se conmueve por las personas que están infelices.",
+              "Intento evitar a las personas que están experimentando mucho dolor.",
+              "Siento que el sufrimiento es solo una parte de la experiencia humana común.",
+              "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
+              "Cuando otros sienten tristeza, intento consolarlos.",
+              "No puedo conectar realmente con otras personas cuando están sufriendo.",
+              "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
+            ],
+            valid: false,
+            name: '',
+            age: null,
+            ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+            gender: '',
+            industry: '',
+            companysize: '',
+            continent: '',
+            continents: [
+              'Europa',
+              'Asia',
+              'África',
+              'América del Norte',
+              'América del Sur',
+              'Oceanía',
+              'Antártida'
+            ],
+            sizes: [
+              '1-10 empleados',
+              '11-50 empleados',
+              '51-200 empleados',
+              '201-500 empleados',
+              '501-1000 empleados',
+              'Más de 1000 empleados',
+            ],
+            genders: ['Masculino', 'Femenino', 'Otro'],
           },
-          scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
-          loading: false,
-          successMessage: '',
-          questions: [
-            "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
-            "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
-            "No me preocupo por los problemas de otras personas.",
-            "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte de ser humano.",
-            "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
-            "Me gusta estar ahí para los demás en tiempos de dificultad.",
-            "Pienso poco en las preocupaciones de los demás.",
-            "Siento que es importante reconocer que todas las personas tienen debilidades y nadie es perfecto.",
-            "Escucho pacientemente cuando la gente me cuenta sus problemas.",
-            "Mi corazón se conmueve por las personas que están infelices.",
-            "Intento evitar a las personas que están experimentando mucho dolor.",
-            "Siento que el sufrimiento es solo una parte de la experiencia humana común.",
-            "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
-            "Cuando otros sienten tristeza, intento consolarlos.",
-            "No puedo conectar realmente con otras personas cuando están sufriendo.",
-            "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
-          ],
-          valid: false,
-          name: '',
-          age: null,
-          ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
-          gender: '',
-          genders: ['Masculino', 'Femenino', 'Otro'],
           rules: {
             minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
           }
@@ -119,31 +155,32 @@
       },
       methods: {
         submitForm() {
-          if (!this.valid) {
-            this.successMessage = 'Por favor, rellena el formulario correctamente!';
+          if (!this.form.valid) {
+            this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
             return;
           }
-          this.loading = true;
+          console.table('Submitting form:', this.form);
+          this.form.loading = true;
           const formData = new FormData();
-          formData.append('Name', 'John Doe');
-          formData.append('Gender', 'Male/Female');
-          formData.append('Age', '18');
-          formData.append('Industry', 'Technology');
-          formData.append('Company Size', '1-10');
-          formData.append('Continent', 'Europe');
-          this.formData.answers.forEach((answer, index) => {
+          formData.append('Name', this.form.name);
+          formData.append('Gender', this.form.gender);
+          formData.append('Age', this.form.age);
+          formData.append('Industry', this.form.industry);
+          formData.append('Company Size', this.form.companySize);
+          formData.append('Continent', this.form.continent);
+          this.form.answers.forEach((answer, index) => {
             formData.append(`answer${index + 1}`, answer);
           });
 
-          fetch(this.scriptUrl, { method: 'POST', body: formData })
+          fetch(this.form.scriptUrl, { method: 'POST', body: formData })
             .then(response => response.json())
             .then(data => {
-              this.successMessage = '¡Formulario enviado con éxito!';
-              this.loading = false;
+              this.form.successMessage = '¡Formulario enviado con éxito!';
+              this.form.loading = false;
             })
             .catch(error => {
               console.error('Error submitting form:', error);
-              this.loading = false;
+              this.form.loading = false;
             });
         },
       },

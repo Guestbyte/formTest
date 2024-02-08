@@ -63,13 +63,13 @@
                   </v-col>
                   <v-col cols="6" sm="4">
                     <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
-                    required></v-select>
+                      required></v-select>
                   </v-col>
                   <v-col cols="6" sm="4">
                     <v-select v-model="form.continent" :items="form.continents" label="Continente" required></v-select>
                   </v-col>
                   <v-col cols="12" v-if="sessionName">
-                    <v-text-field  v-model="form.sessionName" label="Notas" ></v-text-field>
+                    <v-text-field v-model="form.sessionName" label="Notas"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -116,7 +116,8 @@
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
               <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
               <span v-if="form.successMessage">{{ form.successMessage }}</span>
-              <v-alert v-if="form.successMessage && debugMode" border="top" colored-border type="info" elevation="2" class="mt-2">
+              <v-alert v-if="form.successMessage && debugMode" border="top" colored-border type="info" elevation="2"
+                class="mt-2">
                 {{ form.scaleResult }}
               </v-alert>
             </v-container>
@@ -219,6 +220,16 @@
         onChange() {
           isDisabled() ? this.form.valid = false : this.form.valid = true
         },
+        reverseAnswer(answer) {
+          const reversedValues = {
+            1: 5,
+            2: 4,
+            3: 3,
+            4: 2,
+            5: 1
+          };
+          return reversedValues[answer] || answer;
+        },
         submitForm() {
           if (!this.form.valid) {
             this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
@@ -236,7 +247,12 @@
 
           let total = Number(0);
           this.form.answers.forEach((answer, index) => {
-            formData.append(`answer${index + 1}`, answer);
+            index = index + 1;
+
+            let reversedScored = [3, 7, 11, 15].indexOf(index) !== -1;
+            if (reversedScored) answer = this.reverseAnswer(answer);
+
+            formData.append(`answer${index}`, answer);
             total += Number(answer);
           });
           formData.append('answerTotal', total);

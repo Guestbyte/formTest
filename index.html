@@ -4,35 +4,61 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>Patricia Grams - La Escala de Compasión (EC)</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.5.14/dist/vuetify.js"></script>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 </head>
 
 <body>
   <div id="app">
     <v-app>
       <v-container>
-        <v-col cols="10" align-self="center">
+        <v-col cols="12">
           <v-card>
             <v-img
-              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"
-              max-height="325" class="bg-grey-lighten-2"></v-img>
+              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img>
           </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" offset-md1>
           <br>
-          <v-card>
-            <v-card-text>
-              La Escala de Compasión (EC)
-              <br />
-              Instrucciones: Por favor, lee cada afirmación cuidadosamente antes de responder. Responde de acuerdo a
-              lo
-              que realmente refleja tu experiencia en lugar de lo que crees que debería ser tu experiencia. Indica con
-              qué
-              frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
-            </v-card-text>
-          </v-card>
+          <v-expansion-panels focusable>
+            <v-expansion-panel>
+              <v-expansion-panel-header>
+                La Escala de Compasión (EC) - Instrucciones:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  Por favor, lee cada afirmación cuidadosamente antes de responder. <br>
+                  Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser
+                  tu experiencia.
+                  <br>
+                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
+                </v-card-text>
+                <div class="text-center">
+
+                  <!-- <v-card-text>
+                    1 - Casi nunca - 2 - 3 - 4 - 5 - Casi siempre
+                  </v-card-text>
+                  <v-rating background-color="grey" color="grey" hover length="5" readonly size="40">5</v-rating> -->
+                  <v-btn-toggle color="blue accent-3" group rounded>
+                    <v-btn value=1>1 - Casi nunca</v-btn>
+                    <v-btn value=2>2</v-btn>
+                    <v-btn value=3>3</v-btn>
+                    <v-btn value=4>4</v-btn>
+                    <v-btn value=5>5 - Casi siempre</v-btn>
+                  </v-btn-toggle>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
           <v-form v-model="form.valid">
             <v-container>
               <v-container fluid grid-list-md>
@@ -52,7 +78,8 @@
                     <v-text-field v-model="form.industry" label="Industria" required></v-text-field>
                   </v-col>
                   <v-col cols="4" sm="4">
-                    <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa" required></v-select>
+                    <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
+                      required></v-select>
                   </v-col>
                   <v-col cols="4" sm="4">
                     <v-select v-model="form.continent" :items="form.continents" label="Continente" required></v-select>
@@ -63,20 +90,36 @@
                 <v-col>
                   <v-card>
                     <v-card-text>{{ question }}</v-card-text>
-                    <v-card-actions class="d-flex">
-                      <v-radio-group v-model="form.answers[index]" row>
-                        <v-radio label="1 - Casi nunca" value="1" color="primary" class="mr-4"></v-radio>
-                        <v-radio label="2" value="2" color="primary" class="mr-4"></v-radio>
-                        <v-radio label="3" value="3" color="primary" class="mr-4"></v-radio>
-                        <v-radio label="4" value="4" color="primary" class="mr-4"></v-radio>
-                        <v-radio label="5 - Casi siempre" value="5" color="primary" class="mr-4"></v-radio>
-                      </v-radio-group>
+                    <v-card-actions>
+                      <div class="text-center">
+
+                        <!-- <v-card-text >
+                          1 - Casi nunca - 2 - 3 - 4 - 5 - Casi siempre
+                        </v-card-text> -->
+                        <!-- <v-rating v-model="form.answers[index]" background-color="grey" color="blue" hover length="5"
+                          size="40"></v-rating> -->
+
+                        <v-btn-toggle v-model="form.answers[index]" color="green" group rounded>
+                          <v-btn value=1>1 - Casi nunca</v-btn>
+                          <v-btn value=2>2</v-btn>
+                          <v-btn value=3>3</v-btn>
+                          <v-btn value=4>4</v-btn>
+                          <v-btn value=5>5 - Casi siempre</v-btn>
+                        </v-btn-toggle>
+                        <!-- <v-card-text v-if="form.answers[index] == '1'">1 - Casi nunca</v-card-text>
+                        <v-card-text v-if="form.answers[index] == '2'">2</v-card-text>
+                        <v-card-text v-if="form.answers[index] == '3'">3</v-card-text>
+                        <v-card-text v-if="form.answers[index] == '4'">4</v-card-text>
+                        <v-card-text v-if="form.answers[index] == '5'">5 - Casi siempre</v-card-text> -->
+
+                      </div>
                     </v-card-actions>
                   </v-card>
                 </v-col>
               </v-row>
               <br>
-              <v-btn @click="submitForm" :disabled="form.loading" color="primary">{{ form.loading ? 'Enviando...' : 'Enviar'
+              <v-btn @click="submitForm" :disabled="form.loading" color="primary">{{ form.loading ? 'Enviando...' :
+                'Enviar'
                 }}</v-btn>
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
               <p v-if="form.successMessage">{{ form.successMessage }}</p>
@@ -88,6 +131,13 @@
               Compassion Scale. Assessment, 21-39.
             </v-card-text>
           </v-card>
+        </v-col>
+        <v-footer padless>
+          <v-col class="text-center" cols="12" style="font-size: 10px;">
+            <strong>{{ new Date().getFullYear() }} — Powered by <a
+                href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando Ortiz</a></strong>
+          </v-col>
+        </v-footer>
       </v-container>
     </v-app>
   </div>

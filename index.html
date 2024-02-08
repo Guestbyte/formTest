@@ -58,15 +58,18 @@
                   <v-col cols="6" sm="2">
                     <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
                   </v-col>
+                  <v-col cols="8" sm="8">
+                    <v-text-field v-model="form.email" label="Correo" required :rules="[rules.isEmail]"></v-text-field>
+                  </v-col>
                   <v-col cols="6" sm="4">
-                    <v-text-field v-model="form.industry" label="Industria" required></v-text-field>
+                    <v-select v-model="form.industry" :items="form.industrys" label="Industria" required></v-select>
                   </v-col>
                   <v-col cols="6" sm="4">
                     <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
                       required></v-select>
                   </v-col>
                   <v-col cols="6" sm="4">
-                    <v-select v-model="form.continent" :items="form.continents" label="Continente" required></v-select>
+                    <v-select v-model="form.country" :items="form.countrys" label="Pais" required></v-select>
                   </v-col>
                   <v-col cols="12" v-if="sessionName">
                     <v-text-field v-model="form.sessionName" label="Notas"></v-text-field>
@@ -157,7 +160,7 @@
               "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
               "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
               "No me preocupo por los problemas de otras personas.",
-              "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte de ser humano.",
+              "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte del ser humano.",
               "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
               "Me gusta estar ahí para los demás en tiempos de dificultad.",
               "Pienso poco en las preocupaciones de los demás.",
@@ -165,18 +168,107 @@
               "Escucho pacientemente cuando la gente me cuenta sus problemas.",
               "Mi corazón se conmueve por las personas que están infelices.",
               "Intento evitar a las personas que están experimentando mucho dolor.",
-              "Siento que el sufrimiento es solo una parte de la experiencia humana común.",
+              "Siento que el sufrimiento es sólo una parte de la experiencia humana común.",
               "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
               "Cuando otros sienten tristeza, intento consolarlos.",
               "No puedo conectar realmente con otras personas cuando están sufriendo.",
               "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
             ],
+            industrys: [
+              'Gobierno y servicios públicos',
+              'Productos de consumo y venta minorista',
+              'Telecomunicaciones y medios',
+              'Banca y mercados de capitales',
+              'Productos industriales y construcción',
+              'Seguros',
+              'Petróleo y gas',
+              'Ciencias de la vida',
+              'Energía y servicios públicos',
+              'Automoción',
+              'Otros no identificados'
+            ],
             valid: false,
             name: '',
             age: null,
-            ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+            // ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+            ageOptions: [
+              '0-17 años',
+              '18-24 años',
+              '25-34 años',
+              '35-44 años',
+              '45-54 años',
+              '55-64 años',
+              '65+ años'
+            ],
+            countrys: [
+              'España',
+              'Albania',
+              'Alemania',
+              'Andorra',
+              'Armenia',
+              'Austria',
+              'Azerbaiyán',
+              'Bélgica',
+              'Bielorrusia',
+              'Bolivia',
+              'Bosnia y Herzegovina',
+              'Brasil',
+              'Canadá',
+              'Chile',
+              'China',
+              'Chipre',
+              'Ciudad del Vaticano',
+              'Colombia',
+              'Corea del Sur',
+              'Croacia',
+              'Dinamarca',
+              'Ecuador',
+              'Eslovaquia',
+              'Eslovenia',
+              'Estonia',
+              'Estados Unidos',
+              'Finlandia',
+              'Francia',
+              'Georgia',
+              'Grecia',
+              'Hungría',
+              'India',
+              'Irlanda',
+              'Islandia',
+              'Italia',
+              'Japón',
+              'Kazajistán',
+              'Letonia',
+              'Liechtenstein',
+              'Lituania',
+              'Luxemburgo',
+              'Malasia',
+              'Malta',
+              'Moldavia',
+              'Mónaco',
+              'Montenegro',
+              'México',
+              'Noruega',
+              'Países Bajos',
+              'Paraguay',
+              'Perú',
+              'Polonia',
+              'Portugal',
+              'Reino Unido',
+              'República Checa',
+              'Rumanía',
+              'Rusia',
+              'San Marino',
+              'Serbia',
+              'Suecia',
+              'Suiza',
+              'Ucrania',
+              'Uruguay',
+              'Venezuela'
+            ],
             gender: '',
             industry: '',
+            email: '',
             companysize: '',
             continent: '',
             continents: [
@@ -196,10 +288,11 @@
               '501-1000 empleados',
               'Más de 1000 empleados',
             ],
-            genders: ['Masculino', 'Femenino', 'Otro'],
+            genders: ['Masculino', 'Femenino'],
           },
           rules: {
             minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
+            isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
           }
         };
       },
@@ -239,10 +332,11 @@
           const formData = new FormData();
           formData.append('Name', this.form.name);
           formData.append('Gender', this.form.gender);
+          formData.append('Email', this.form.email);
           formData.append('Age', this.form.age);
           formData.append('Industry', this.form.industry);
           formData.append('Company Size', this.form.companySize);
-          formData.append('Continent', this.form.continent);
+          formData.append('Country', this.form.country);
           formData.append('Details', this.form.sessionName);
 
           let total = Number(0);

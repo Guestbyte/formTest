@@ -89,16 +89,9 @@
               <v-row v-for="(question, index) in form.questions" :key="index">
                 <v-col>
                   <v-card>
-                    <v-card-text>{{ question }}</v-card-text>
+                    <v-card-text style="font-size: 18px;">{{ index + 1 }}: {{ question }}</v-card-text>
                     <v-card-actions>
                       <div class="text-center">
-
-                        <!-- <v-card-text >
-                          1 - Casi nunca - 2 - 3 - 4 - 5 - Casi siempre
-                        </v-card-text> -->
-                        <!-- <v-rating v-model="form.answers[index]" background-color="grey" color="blue" hover length="5"
-                          size="40"></v-rating> -->
-
                         <v-btn-toggle v-model="form.answers[index]" color="green" group rounded>
                           <v-btn value=1>1 - Casi nunca</v-btn>
                           <v-btn value=2>2</v-btn>
@@ -106,12 +99,6 @@
                           <v-btn value=4>4</v-btn>
                           <v-btn value=5>5 - Casi siempre</v-btn>
                         </v-btn-toggle>
-                        <!-- <v-card-text v-if="form.answers[index] == '1'">1 - Casi nunca</v-card-text>
-                        <v-card-text v-if="form.answers[index] == '2'">2</v-card-text>
-                        <v-card-text v-if="form.answers[index] == '3'">3</v-card-text>
-                        <v-card-text v-if="form.answers[index] == '4'">4</v-card-text>
-                        <v-card-text v-if="form.answers[index] == '5'">5 - Casi siempre</v-card-text> -->
-
                       </div>
                     </v-card-actions>
                   </v-card>
@@ -134,8 +121,8 @@
         </v-col>
         <v-footer padless>
           <v-col class="text-center" cols="12" style="font-size: 10px;">
-            <strong>{{ new Date().getFullYear() }} — Powered by <a
-                href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando Ortiz</a></strong>
+            <strong>{{ new Date().getFullYear() }} — Develop by <a
+                href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando</a></strong>
           </v-col>
         </v-footer>
       </v-container>
@@ -209,7 +196,6 @@
             this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
             return;
           }
-          console.table('Submitting form:', this.form);
           this.form.loading = true;
           const formData = new FormData();
           formData.append('Name', this.form.name);
@@ -218,9 +204,23 @@
           formData.append('Industry', this.form.industry);
           formData.append('Company Size', this.form.companySize);
           formData.append('Continent', this.form.continent);
+
+          let total = Number(0);
           this.form.answers.forEach((answer, index) => {
             formData.append(`answer${index + 1}`, answer);
+            total += Number(answer);
           });
+          formData.append('answerTotal', total);
+          let answerAverage = (total / this.form.questions.length).toFixed(2);
+          formData.append('answerAverage', answerAverage);
+
+          let scaleResult = null;
+          if (answerAverage <= 2.49) scaleResult = 'LOW';
+          if (answerAverage >= 2.5 && answerAverage <= 3.5) scaleResult = 'MODERATE';
+          if (answerAverage >= 3.51) scaleResult = 'HIGH';
+          formData.append('scaleResult', scaleResult);
+
+          console.table('Submitting formData:', ...formData);
 
           fetch(this.form.scriptUrl, { method: 'POST', body: formData })
             .then(response => response.json())

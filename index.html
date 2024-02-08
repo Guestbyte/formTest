@@ -10,6 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script> -->
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.7.1/dist/vuetify.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.7.1/dist/vuetify.min.js"></script>
 </head>
@@ -17,18 +18,17 @@
 <body>
   <div id="app">
     <v-app>
-      <v-container>
+      <v-container style="padding: 0px;">
         <v-col cols="12">
           <v-card>
             <v-img
               src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="12" offset-md1>
-          <br>
-          <v-expansion-panels focusable>
+        <v-col cols="12">
+          <v-expansion-panels focusable class="mt-1">
             <v-expansion-panel>
-              <v-expansion-panel-header>
+              <v-expansion-panel-header color="grey lighten-3">
                 La Escala de Compasión (EC) - Instrucciones:
               </v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -37,81 +37,88 @@
                   Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser
                   tu experiencia.
                   <br>
-                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala:
+                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala: <br><br>
+                  <strong> 1 - Casi nunca - 2 - 3 - 4 - 5 Casi siempre </strong>
                 </v-card-text>
-                <div class="text-center">
 
-                  <!-- <v-card-text>
-                    1 - Casi nunca - 2 - 3 - 4 - 5 - Casi siempre
-                  </v-card-text>
-                  <v-rating background-color="grey" color="grey" hover length="5" readonly size="40">5</v-rating> -->
-                  <v-btn-toggle color="blue accent-3" group rounded>
-                    <v-btn value=1>1 - Casi nunca</v-btn>
-                    <v-btn value=2>2</v-btn>
-                    <v-btn value=3>3</v-btn>
-                    <v-btn value=4>4</v-btn>
-                    <v-btn value=5>5 - Casi siempre</v-btn>
-                  </v-btn-toggle>
-                </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
 
           <v-form v-model="form.valid">
             <v-container>
-              <v-container fluid grid-list-md>
+              <v-container>
                 <v-row>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="8">
                     <v-text-field v-model="form.name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
                   </v-col>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="4" sm="2">
                     <v-select v-model="form.age" :items="form.ageOptions" label="Edad" required></v-select>
                   </v-col>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="6" sm="2">
                     <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
                   </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="6" sm="4">
                     <v-text-field v-model="form.industry" label="Industria" required></v-text-field>
                   </v-col>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="6" sm="4">
                     <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
-                      required></v-select>
+                    required></v-select>
                   </v-col>
-                  <v-col cols="4" sm="4">
+                  <v-col cols="6" sm="4">
                     <v-select v-model="form.continent" :items="form.continents" label="Continente" required></v-select>
+                  </v-col>
+                  <v-col cols="12" v-if="sessionName">
+                    <v-text-field  v-model="form.sessionName" label="Notas" ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
-              <v-row v-for="(question, index) in form.questions" :key="index">
-                <v-col>
-                  <v-card>
-                    <v-card-text style="font-size: 18px;">{{ index + 1 }}: {{ question }}</v-card-text>
+              <v-row v-for="(question, index) in form.questions" :key="index" class="mt-1">
+                <v-col class="mt-0">
+                  <v-card color="grey lighten-4" class="mt-0">
+                    <v-card-text style="font-size: 18px; color:#303030">{{ index + 1 }}) {{ question }}</v-card-text>
                     <v-card-actions>
-                      <div class="text-center">
-                        <v-btn-toggle v-model="form.answers[index]" color="green" group rounded required @change="isDisabled"
-                          :rules="[rules.required]">
-                          <v-btn value=1>1 - Casi nunca</v-btn>
+                      <div class="text-center" class="w-16 md:w-32 lg:w-48">
+                        <v-btn-toggle v-model="form.answers[index]" color="green" group rounded required
+                          @change="isDisabled" :rules="[rules.required]">
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn v-bind="attrs" v-on="on" value=1>1</v-btn>
+                            </template>
+                            <span>Casi nunca</span>
+                          </v-tooltip>
                           <v-btn value=2>2</v-btn>
                           <v-btn value=3>3</v-btn>
                           <v-btn value=4>4</v-btn>
-                          <v-btn value=5>5 - Casi siempre</v-btn>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn v-bind="attrs" v-on="on" value=5>5</v-btn>
+                            </template>
+                            <span>Casi siempre</span>
+                          </v-tooltip>
                         </v-btn-toggle>
                       </div>
                     </v-card-actions>
+
+                    <v-alert v-if="form.answers[index] == 1" color="light-green darken-2" type="success">1 - Casi
+                      nunca</v-alert>
+                    <v-alert v-if="form.answers[index] == 2" color="light-green darken-2" type="success">2</v-alert>
+                    <v-alert v-if="form.answers[index] == 3" color="light-green darken-2" type="success">3</v-alert>
+                    <v-alert v-if="form.answers[index] == 4" color="light-green darken-2" type="success">4</v-alert>
+                    <v-alert v-if="form.answers[index] == 5" color="light-green darken-2" type="success">5 - Casi
+                      siempre</v-alert>
+
                   </v-card>
                 </v-col>
               </v-row>
-              <br>
-              <v-btn @click="submitForm" :disabled="isDisabled()"
-                color="primary">{{ form.loading ? 'Enviando...' :
-                'Enviar'
-                }}</v-btn>
+              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="primary">{{ form.loading ?
+                'Enviando...' : 'Enviar' }}</v-btn>
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
               <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
               <span v-if="form.successMessage">{{ form.successMessage }}</span>
-              <v-card-text v-if="form.successMessage">{{ form.scaleResult }}</v-card-text>
+              <v-alert v-if="form.successMessage && debugMode" border="top" colored-border type="info" elevation="2" class="mt-2">
+                {{ form.scaleResult }}
+              </v-alert>
             </v-container>
           </v-form>
           <v-card>
@@ -137,12 +144,14 @@
       vuetify: new Vuetify(),
       data() {
         return {
+          hover: false,
           form: {
             answers: Array(16).fill(0),
             scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
             loading: false,
             successMessage: '',
             scaleResult: '',
+            sessionName: '',
             questions: [
               "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
               "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
@@ -194,6 +203,14 @@
         };
       },
       computed: {
+        sessionName() {
+          let sessionName = String(new URLSearchParams(window.location.search).get('name'));
+          this.form.sessionName = sessionName;
+          return (sessionName == 'null') ? false : sessionName;
+        },
+        debugMode() {
+          return Boolean(new URLSearchParams(window.location.search).get('debug'));
+        },
       },
       methods: {
         isDisabled() {
@@ -215,6 +232,7 @@
           formData.append('Industry', this.form.industry);
           formData.append('Company Size', this.form.companySize);
           formData.append('Continent', this.form.continent);
+          formData.append('Details', this.form.sessionName);
 
           let total = Number(0);
           this.form.answers.forEach((answer, index) => {
@@ -236,7 +254,7 @@
           fetch(this.form.scriptUrl, { method: 'POST', body: formData })
             .then(response => response.json())
             .then(data => {
-              this.form.successMessage = '¡Formulario enviado con éxito! ';
+              this.form.successMessage = '¡Enviado con éxito! ';
               this.form.scaleResult = '[ TOTAL: ' + total + ' | AVERAGE: ' + answerAverage + ' | SCALE: ' + scaleResult + ' ]';
               this.form.loading = false;
               this.form.name = '';

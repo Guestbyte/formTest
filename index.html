@@ -119,9 +119,15 @@
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
               <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
               <span v-if="form.successMessage">{{ form.successMessage }}</span>
-              <v-alert v-if="form.successMessage && debugMode" border="top" colored-border type="info" elevation="2"
-                class="mt-2">
-                {{ form.scaleResult }}
+              <v-alert v-if="form.successMessage" border="top" colored-border type="info" elevation="2" class="mt-2">
+
+                ¡Gracias por completar tu examen! <br>
+                A continuación, te presentamos tus resultados: <br><br>
+
+                Total de puntos:  <strong> {{ form.answerTotal }}</strong> <br>
+                Promedio de puntos:  <strong> {{ form.answerAverage }}</strong> <br>
+                Resultado: <strong> {{ form.scaleResult }}</strong> <br>
+
               </v-alert>
             </v-container>
           </v-form>
@@ -270,16 +276,6 @@
             industry: '',
             email: '',
             companysize: '',
-            continent: '',
-            continents: [
-              'Europa',
-              'Asia',
-              'África',
-              'América del Norte',
-              'América del Sur',
-              'Oceanía',
-              'Antártida'
-            ],
             sizes: [
               '1-10 empleados',
               '11-50 empleados',
@@ -354,9 +350,9 @@
           formData.append('answerAverage', answerAverage);
 
           let scaleResult = null;
-          if (answerAverage <= 2.49) scaleResult = 'LOW';
-          if (answerAverage >= 2.5 && answerAverage <= 3.5) scaleResult = 'MODERATE';
-          if (answerAverage >= 3.51) scaleResult = 'HIGH';
+          if (answerAverage <= 2.49) scaleResult = 'BAJO';
+          if (answerAverage >= 2.5 && answerAverage <= 3.5) scaleResult = 'MODERADO';
+          if (answerAverage >= 3.51) scaleResult = 'ALTO';
           formData.append('scaleResult', scaleResult);
 
           console.table('Submitting formData:', ...formData);
@@ -365,14 +361,18 @@
             .then(response => response.json())
             .then(data => {
               this.form.successMessage = '¡Enviado con éxito! ';
-              this.form.scaleResult = '[ TOTAL: ' + total + ' | AVERAGE: ' + answerAverage + ' | SCALE: ' + scaleResult + ' ]';
+              this.form.scaleResult = scaleResult;
+              this.form.answerTotal = total;
+              this.form.answerAverage = answerAverage;
               this.form.loading = false;
+
               this.form.name = '';
+              this.form.email = '';
+              this.form.country = '';
               this.form.gender = '';
               this.form.age = '';
               this.form.industry = '';
               this.form.companySize = '';
-              this.form.continent = '';
               this.form.answers.forEach((answer, index) => this.form.answers[index] = 0);
             })
             .catch(error => {

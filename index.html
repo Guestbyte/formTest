@@ -49,18 +49,18 @@
             <v-container>
               <v-container>
                 <v-row>
-                  <v-col cols="8">
+                  <!-- <v-col cols="8">
                     <v-text-field v-model="form.name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
-                  </v-col>
+                  </v-col> -->
                   <v-col cols="4" sm="2">
                     <v-select v-model="form.age" :items="form.ageOptions" label="Edad" required></v-select>
                   </v-col>
                   <v-col cols="6" sm="2">
                     <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
                   </v-col>
-                  <v-col cols="8" sm="8">
+                  <!-- <v-col cols="8" sm="8">
                     <v-text-field v-model="form.email" label="Correo" required :rules="[rules.isEmail]"></v-text-field>
-                  </v-col>
+                  </v-col> -->
                   <v-col cols="6" sm="4">
                     <v-select v-model="form.industry" :items="form.industrys" label="Industria" required></v-select>
                   </v-col>
